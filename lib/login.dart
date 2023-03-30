@@ -296,20 +296,19 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                         ),
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.all(50.0),
-                          child: SizedBox(
-                            width: 270,
-                            child: Text(
-                              'If you are not register than yoy are not admin,stay away from this pannel',
-                              style: TextStyle(
-                                  color: Colors.black.withOpacity(0.6),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(50.0),
+                        //   child: SizedBox(
+                        //     width: 270,
+                        //     child: Text(
+                        //       'If you are not register than yoy are not admin,stay away from this pannel',
+                        //       style: TextStyle(
+                        //           color: Colors.black.withOpacity(0.6),
+                        //           fontSize: 12,
+                        //           fontWeight: FontWeight.w400),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
