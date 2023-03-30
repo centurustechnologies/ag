@@ -14,20 +14,21 @@ class Admins extends StatefulWidget {
 }
 
 class _AdminsState extends State<Admins> {
-TextEditingController changepasscontroller=TextEditingController();
+  TextEditingController changepasscontroller = TextEditingController();
 
   final CollectionReference chat =
       FirebaseFirestore.instance.collection('admins');
 
   bool newadmin = false;
 
-   Future changepass(String id) async {
+  Future changepass(String id) async {
     FirebaseFirestore.instance
         .collection('admins')
         .doc(id)
         .update({'password': changepasscontroller.text});
   }
 
+  bool password = false;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,7 @@ TextEditingController changepasscontroller=TextEditingController();
                         Padding(
                           padding: const EdgeInsets.only(left: 0),
                           child: SizedBox(
-                            width: width / 12,
+                            width: width / 11,
                             child: Center(
                               child: const Text(
                                 'User Id',
@@ -135,7 +136,7 @@ TextEditingController changepasscontroller=TextEditingController();
                           ),
                         ),
                         SizedBox(
-                          width: width / 12,
+                          width: width / 10,
                           child: const Text(
                             'Password',
                             style: TextStyle(
@@ -178,8 +179,8 @@ TextEditingController changepasscontroller=TextEditingController();
                                     streamSnapshot.data!.docs[index];
                                 return InkWell(
                                   onTap: () {
-                                  dialog(context, documentSnapshot.id)  ;
-                                  print(documentSnapshot.id);
+                                    dialog(context, documentSnapshot.id);
+                                    print(documentSnapshot.id);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -275,18 +276,52 @@ TextEditingController changepasscontroller=TextEditingController();
                                                   textAlign: TextAlign.start,
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: 100,
-                                                child: Text(
-                                                  documentSnapshot['password'],
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.6),
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ),
+                                              password
+                                                  ? InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          password = false;
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        width: 100,
+                                                        child: Text(
+                                                          documentSnapshot[
+                                                              'password'],
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.6),
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          password = true;
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        width: 100,
+                                                        child: Text(
+                                                          '*******',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.9),
+                                                              fontSize: 19,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      ),
+                                                    )
                                             ],
                                           ),
                                         ],
@@ -376,7 +411,7 @@ TextEditingController changepasscontroller=TextEditingController();
                   width: 250,
                   child: MaterialButton(
                     onPressed: () {
-                    changepass(id);
+                      changepass(id);
                       Navigator.pop(context);
                       //dialog1(context);
                     },
@@ -401,5 +436,4 @@ TextEditingController changepasscontroller=TextEditingController();
           );
         });
   }
-
 }

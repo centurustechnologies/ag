@@ -24,14 +24,16 @@ class _LeadsState extends State<Leads> {
     'date of birth',
     'Mother name',
     'Email',
-    'Bank name',
-    'Card Type',
+    'pan Number',
+    'Existing Card Bank',
+    'Existing Card Limit',
     'Current Adress',
     'LandMark',
     'company name',
+    'Official adress',
     'Net Monthly Income',
     'ITR Slip',
-    'Salary slip'
+    'Pin Code'
   ];
   final CollectionReference Payments =
       FirebaseFirestore.instance.collection('leads');
@@ -115,12 +117,13 @@ class _LeadsState extends State<Leads> {
                               blurRadius: 1)
                         ]),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 2),
+                      padding: const EdgeInsets.only(left: 15, bottom: 2),
                       child: TextField(
                         keyboardType: TextInputType.text,
+                        //inputFormatters: [LowerCaseTextFormatter()],
                         textCapitalization: TextCapitalization.words,
                         controller: updatecontroller,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter present status here',
                           hintStyle:
@@ -190,56 +193,73 @@ class _LeadsState extends State<Leads> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Container(
-                height: 39,
-                width: width / 1.2,
-                color: const Color.fromARGB(255, 4, 63, 111),
+                height: 40,
+                width: MediaQuery.of(context).size.width,
+                color: const Color.fromARGB(255, 5, 66, 116),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      'Applied Bank',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.6)),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 0),
+                      child: SizedBox(
+                        width: width / 12,
+                        child: const Center(
+                          child: Text(
+                            'Applied Bank',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
                     ),
-                    Text(
-                      'Status',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.6)),
+                    SizedBox(
+                      width: width / 12,
+                      child: const Text(
+                        'Status',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    Text(
-                      'Applicant',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.6)),
+                    SizedBox(
+                      width: width / 12,
+                      child: const Text(
+                        'Applicant',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
-                    Text(
-                      'UserName',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.6)),
+                    SizedBox(
+                      width: width / 12,
+                      child: const Text(
+                        'Agent',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
-                    Text(
-                      'Progress',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.6)),
+                    SizedBox(
+                      width: width / 9,
+                      child: const Text(
+                        'Applied Card',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.start,
+                      ),
                     ),
-                    Text(
-                      'Details',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.6)),
-                    ),
+                   
                   ],
                 ),
               ),
@@ -262,7 +282,7 @@ class _LeadsState extends State<Leads> {
                               16, // Horizontal space between grid items
                           //horizontalGridSpacing: 16, // Vertical space between grid items
                           horizontalGridMargin:
-                              50, // Horizontal space around the grid
+                              0, // Horizontal space around the grid
 
                           minItemWidth:
                               300, // The minimum item width (can be smaller, if the layout constraints are smaller)
@@ -278,110 +298,96 @@ class _LeadsState extends State<Leads> {
                                 streamSnapshot.data!.docs[index];
                             if (streamSnapshot.hasData) {
                               return ExpansionTile(
-                                trailing: const Icon(
-                                  Icons.more_vert,
-                                  color: Colors.grey,
+                                trailing: SizedBox(
+                                  height: 1,
+                                  width: 1,
                                 ),
-                                title: SizedBox(
-                                  width: width / 1.2,
-                                  //height: height / 21,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    //crossAxisAlignment: CrossAxisAlignment.,
-                                    children: [
-                                      Text(
-                                        documentSnapshot['Bank_name'],
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black),
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: documentSnapshot[
-                                                      'application_status'] ==
-                                                  'sucess'
-                                              ? Colors.green.withOpacity(0.1)
-                                              : Colors.orange.withOpacity(0.1),
+                                title: Padding(
+                                  padding: const EdgeInsets.only(left: 35),
+                                  child: Container(
+                                    width: width,
+                                    //color: Colors.amber,
+                                    //height: height / 21,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      //crossAxisAlignment: CrossAxisAlignment.,
+                                      children: [
+                                        SizedBox(
+                                          width: 100,
+                                          child: Text(
+                                            documentSnapshot['Bank_name'],
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.black),
+                                            textAlign: TextAlign.start,
+                                          ),
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 9, vertical: 3),
+                                        SizedBox(
+                                          width: 120,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 9, vertical: 3),
+                                            child: Text(
+                                              documentSnapshot[
+                                                  'application_status'],
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: documentSnapshot[
+                                                              'application_status'] ==
+                                                          'sucess'
+                                                      ? const Color.fromARGB(
+                                                          255, 83, 237, 89)
+                                                      : Colors.orange),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 120,
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
                                               Text(
-                                                documentSnapshot[
-                                                    'application_status'],
-                                                style: TextStyle(
-                                                    fontSize: 12,
+                                                documentSnapshot['first_name'],
+                                                style: const TextStyle(
+                                                    fontSize: 13,
                                                     fontWeight: FontWeight.w700,
-                                                    color: documentSnapshot[
-                                                                'application_status'] ==
-                                                            'sucess'
-                                                        ? const Color.fromARGB(
-                                                            255, 83, 237, 89)
-                                                        : Colors.orange),
+                                                    color: Colors.black),
+                                                textAlign: TextAlign.start,
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 120,
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              documentSnapshot['first_name'],
-                                              style: const TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black),
-                                            ),
-                                          ],
+                                        SizedBox(
+                                          width: 120,
+                                          child: Text(
+                                            documentSnapshot['token'],
+                                            style: const TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.black),
+                                            textAlign: TextAlign.start,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 90,
-                                        child: Text(
-                                          documentSnapshot['token'],
-                                          style: const TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black),
+                                        SizedBox(
+                                          width: 120,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                documentSnapshot['card_type'],
+                                                style: const TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black),
+                                                textAlign: TextAlign.end,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      LinearPercentIndicator(
-                                        width: width / 10,
-                                        animation: true,
-                                        lineHeight: 13.0,
-                                        //fillColor: Colors.transparent,
-                                        barRadius: const Radius.circular(20),
-                                        animationDuration: 2500,
-
-                                        percent: documentSnapshot[
-                                                    'application_status'] ==
-                                                'Sucess'
-                                            ? 1
-                                            : 0.4,
-                                        // center: const Text(
-                                        //   "80.0%",
-                                        //   style: TextStyle(fontSize: 11),
-                                        // ),
-                                        // ignore: deprecated_member_use
-                                        linearStrokeCap:
-                                            LinearStrokeCap.roundAll,
-                                        progressColor: const Color.fromARGB(
-                                            255, 4, 63, 111),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 //subtitle: Text('Trailing expansion arrow icon'),
@@ -410,7 +416,7 @@ class _LeadsState extends State<Leads> {
                                               5, // The maximum items to show in a single row. Can be useful on large screens
                                           listViewBuilderOptions:
                                               ListViewBuilderOptions(), // Options that are getting passed to the ListView.builder() function
-                                          children: List.generate(12, (index) {
+                                          children: List.generate(14, (index) {
                                             return Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -469,20 +475,24 @@ class _LeadsState extends State<Leads> {
                                                                       : index ==
                                                                               4
                                                                           ? documentSnapshot[
-                                                                              'Bank_name']
+                                                                              'national_id']
                                                                           : index == 5
-                                                                              ? documentSnapshot['card_type']
+                                                                              ? documentSnapshot['existing_card_bank_name']
                                                                               : index == 6
-                                                                                  ? documentSnapshot['current_adress']
+                                                                                  ? documentSnapshot['existing_card_limit']
                                                                                   : index == 7
-                                                                                      ? documentSnapshot['landmark']
+                                                                                      ? documentSnapshot['current_adress']
                                                                                       : index == 8
-                                                                                          ? documentSnapshot['companyname']
+                                                                                          ? documentSnapshot['landmark']
                                                                                           : index == 9
-                                                                                              ? documentSnapshot['gross_monthly_icome']
+                                                                                              ? documentSnapshot['companyname']
                                                                                               : index == 10
-                                                                                                  ? documentSnapshot['yearly_return_details']
-                                                                                                  : documentSnapshot['state'],
+                                                                                                  ? documentSnapshot['work_place']
+                                                                                                  : index == 11
+                                                                                                      ? documentSnapshot['gross_monthly_icome']
+                                                                                                      : index == 12
+                                                                                                          ? documentSnapshot['yearly_return_details']
+                                                                                                          : documentSnapshot['pin_code'],
                                                       style: TextStyle(
                                                           fontSize: 13,
                                                           fontWeight:
@@ -505,7 +515,7 @@ class _LeadsState extends State<Leads> {
                           }) // The list of widgets in the list
                           );
                     }
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }),
             ),
           ],
@@ -827,7 +837,7 @@ class _LeadsState extends State<Leads> {
                       );
                     }));
               }
-              return Center(child: const CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }),
       ),
     );

@@ -31,7 +31,7 @@ class _SidebarXExampleAppState extends State<SidebarXExampleApp> {
   bool showSettings = false;
   bool showFeedback = false;
   bool showReport = false;
-   Future<bool> willPop() async {
+  Future<bool> willPop() async {
     return false;
   }
 
@@ -127,7 +127,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           color: const Color.fromARGB(255, 4, 63, 111),
           borderRadius: BorderRadius.circular(20),
         ),
-        hoverColor: const Color.fromARGB(255, 4, 63, 111),
+        hoverColor: Color.fromARGB(255, 15, 96, 162),
         textStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
         selectedTextStyle: const TextStyle(color: Colors.white),
         itemTextPadding: const EdgeInsets.only(left: 30),

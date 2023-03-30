@@ -1,5 +1,8 @@
+import 'package:ag_financial_admin_pannel/admins.dart';
+import 'package:ag_financial_admin_pannel/sidebar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -37,34 +40,52 @@ class _AdminControlState extends State<AdminControl> {
       'register_date': dateController.text,
     }).whenComplete(() {});
   }
+  bool admin=false;
 
-     Future check() async {
-                            final Query query = FirebaseFirestore.instance
-                                .collection('admins')
-                                .where('userid',
-                                    isEqualTo: useridController.text);
+  Future check() async {
+    final Query query = FirebaseFirestore.instance
+        .collection('admins')
+        .where('userid', isEqualTo: useridController.text);
 
-                            query.get().then((querySnapshot) {
-                              if (querySnapshot.size > 0) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text('This userid is already exist'),
-                                    backgroundColor: Colors.red,
-                                    behavior: SnackBarBehavior.floating,
-                                    margin: const EdgeInsets.all(10),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                );
-                              } else {
-                              newAdmin();
-                              }
-                            }).catchError((error) {
-                              // Handle any errors
-                            });
-                          }
+    query.get().then((querySnapshot) {
+      if (querySnapshot.size > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('This userid is already exist'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(10),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      } else {
+        newAdmin();
+        Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SidebarXExampleApp()),
+                      );
+      }
+    }).catchError((error) {
+      // Handle any errors
+    });
+  }
 
+  DateTime selectedDate = DateTime(2050, 1);
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1950, 8),
+        lastDate: DateTime(2050, 1));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        dateController.text =
+            "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +100,7 @@ class _AdminControlState extends State<AdminControl> {
   desktopView(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Row(
+    return  Row(
         children: [
           const SizedBox(
             width: 70,
@@ -178,6 +198,11 @@ class _AdminControlState extends State<AdminControl> {
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 15, bottom: 6),
                                   child: TextField(
+                                    onTap: index == 4
+                                        ? () {
+                                            _selectDate(context);
+                                          }
+                                        : () {},
                                     controller: index == 0
                                         ? useridController
                                         : index == 1
@@ -191,6 +216,13 @@ class _AdminControlState extends State<AdminControl> {
                                                         : index == 5
                                                             ? designationController
                                                             : passwordController,
+                                    inputFormatters: index == 3
+                                        ? <TextInputFormatter>[
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                            LengthLimitingTextInputFormatter(10)
+                                          ]
+                                        : <TextInputFormatter>[],
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Enter here',
@@ -226,8 +258,7 @@ class _AdminControlState extends State<AdminControl> {
                             emailController.text.isNotEmpty &&
                             designationController.text.isNotEmpty &&
                             passwordController.text.isNotEmpty) {
-                        
-                       check();
+                          check();
                           //useridAdmin();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -271,8 +302,8 @@ class _AdminControlState extends State<AdminControl> {
             ),
           ),
         ],
-      ),
-    );
+      );
+    
   }
 
   dialog(BuildContext context, id) {

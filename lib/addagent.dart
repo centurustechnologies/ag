@@ -1,5 +1,7 @@
+import 'package:ag_financial_admin_pannel/sidebar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -27,9 +29,9 @@ class _AddUserState extends State<AddUser> {
 
   TextEditingController passwordController = TextEditingController();
 
-  String location='';
+  String location = '';
 
-   Future getadmindata(String id) async {
+  Future getadmindata(String id) async {
     await FirebaseFirestore.instance
         .collection('admins')
         .doc(id)
@@ -40,14 +42,11 @@ class _AddUserState extends State<AddUser> {
           location = value.get('Location');
           //pass = value.get('password');
         });
-        
-      
-        
       }
     });
   }
 
-    String localtoken = '';
+  String localtoken = '';
   checkLogin() {
     String? token = window.localStorage['userid'];
 
@@ -64,12 +63,12 @@ class _AddUserState extends State<AddUser> {
     //log('user number is splash $token');
   }
 
-
-
-
   Future<void> newAgent() async {
-    await FirebaseFirestore.instance.collection('agents').doc(passwordController.text).set({
-      'location':location,
+    await FirebaseFirestore.instance
+        .collection('agents')
+        .doc(passwordController.text)
+        .set({
+      'location': location,
       'userid': useridController.text,
       'password': passwordController.text,
       'name': firstnameController.text,
@@ -81,41 +80,56 @@ class _AddUserState extends State<AddUser> {
     }).whenComplete(() {});
   }
 
+  Future check() async {
+    final Query query = FirebaseFirestore.instance
+        .collection('agents')
+        .where('userid', isEqualTo: useridController.text);
 
-   Future check() async {
-                            final Query query = FirebaseFirestore.instance
-                                .collection('agents')
-                                .where('userid',
-                                    isEqualTo: useridController.text);
+    query.get().then((querySnapshot) {
+      if (querySnapshot.size > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('This userid is already exist'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(10),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      } else {
+        newAgent();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SidebarXExampleApp()),
+        );
+      }
+    }).catchError((error) {
+      // Handle any errors
+    });
+  }
 
-                            query.get().then((querySnapshot) {
-                              if (querySnapshot.size > 0) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text('This userid is already exist'),
-                                    backgroundColor: Colors.red,
-                                    behavior: SnackBarBehavior.floating,
-                                    margin: const EdgeInsets.all(10),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                );
-                              } else {
-                              newAgent();
-                              }
-                            }).catchError((error) {
-                              // Handle any errors
-                            });
-                          }
-
+  DateTime selectedDate = DateTime(2050, 1);
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1950, 8),
+        lastDate: DateTime(2050, 1));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        dateController.text =
+            "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      });
+    }
+  }
 
   @override
   void initState() {
     checkLogin();
     // TODO: implement initState
     super.initState();
-    
   }
 
   @override
@@ -167,7 +181,7 @@ class _AddUserState extends State<AddUser> {
                 ),
               ),
               SizedBox(
-                height: height / 1.2,
+                height: height / 1.3,
                 child: ResponsiveGridList(
                     horizontalGridSpacing: 16,
                     horizontalGridMargin: 20,
@@ -190,7 +204,7 @@ class _AddUserState extends State<AddUser> {
                             width: 140,
                             child: Text(
                               index == 0
-                                  ? 'Username'
+                                  ? 'User Id'
                                   : index == 1
                                       ? 'Name'
                                       : index == 2
@@ -230,6 +244,11 @@ class _AddUserState extends State<AddUser> {
                               child: Padding(
                                 padding: EdgeInsets.only(left: 15, bottom: 6),
                                 child: TextField(
+                                  onTap: index == 5
+                                      ? () {
+                                          _selectDate(context);
+                                        }
+                                      : () {},
                                   controller: index == 0
                                       ? useridController
                                       : index == 1
@@ -243,11 +262,25 @@ class _AddUserState extends State<AddUser> {
                                                       : index == 5
                                                           ? dateController
                                                           : index == 6
-                                                              ? dateController
+                                                              ? designationController
                                                               : passwordController,
+                                  inputFormatters: index == 4
+                                      ? <TextInputFormatter>[
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                          LengthLimitingTextInputFormatter(10)
+                                        ]
+                                      : index == 5
+                                          ? <TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                              LengthLimitingTextInputFormatter(
+                                                  10)
+                                            ]
+                                          : <TextInputFormatter>[],
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'Enter username',
+                                    hintText: 'Enter here',
                                     hintStyle: TextStyle(
                                         color: Colors.grey, fontSize: 14),
                                   ),
@@ -259,71 +292,6 @@ class _AddUserState extends State<AddUser> {
                       ),
                     )),
               ),
-            ],
-          ),
-        ),
-        const Spacer(),
-        Container(
-          height: height,
-          width: width / 3.6,
-          color: Colors.blue.withOpacity(0.1),
-          child: Column(
-            children: [
-              SizedBox(
-                height: height / 2,
-                child: ResponsiveGridList(
-                    horizontalGridSpacing: 16,
-                    horizontalGridMargin: 20,
-                    minItemWidth: 270,
-                    minItemsPerRow: 1,
-                    maxItemsPerRow: 1,
-                    listViewBuilderOptions:
-                        ListViewBuilderOptions(scrollDirection: Axis.vertical),
-                    children: List.generate(
-                      4,
-                      (index) => SizedBox(
-                        height: 70,
-                        width: width / 4.5,
-                        child: Row(children: [
-                          const Icon(
-                            Icons.menu,
-                            color: Colors.grey,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 60,
-                              width: width / 5,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: const Color.fromARGB(
-                                                255, 102, 100, 100)
-                                            .withOpacity(0.4),
-                                        spreadRadius: 1,
-                                        blurRadius: 1)
-                                  ]),
-                              child: const Padding(
-                                padding: EdgeInsets.only(left: 15, bottom: 6),
-                                child: TextField(
-                                  //controller: control,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Additional information',
-                                    hintStyle: TextStyle(
-                                        color: Colors.black, fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ]),
-                      ),
-                    )),
-              ),
-              const Spacer(),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 0, vertical: 25),
@@ -339,14 +307,11 @@ class _AddUserState extends State<AddUser> {
                   ),
                   child: MaterialButton(
                     onPressed: () {
-                      if (
-                          useridController.text.isNotEmpty &&
-                         areaController.text.isNotEmpty&&
+                      if (useridController.text.isNotEmpty &&
+                          areaController.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
-                           
-                            getadmindata(localtoken);
-                             check();
-                      
+                        getadmindata(localtoken);
+                        check();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -360,7 +325,6 @@ class _AddUserState extends State<AddUser> {
                           ),
                         );
                       }
-                     
                     },
                     //color: Colors.blue,
                     height: 38,
@@ -385,12 +349,9 @@ class _AddUserState extends State<AddUser> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              )
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -442,10 +403,8 @@ class _AddUserState extends State<AddUser> {
                   width: 250,
                   child: MaterialButton(
                     onPressed: () {
-                     
-                    check();
+                      check();
                       Navigator.pop(context);
-                     
                     },
                     color: const Color.fromARGB(255, 4, 53, 94),
                     shape: RoundedRectangleBorder(
@@ -468,7 +427,6 @@ class _AddUserState extends State<AddUser> {
           );
         });
   }
-
 
   mobileView(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -532,7 +490,7 @@ class _AddUserState extends State<AddUser> {
                             width: 140,
                             child: Text(
                               index == 0
-                                  ? 'Username'
+                                  ? 'User Id'
                                   : index == 1
                                       ? 'Name'
                                       : index == 2
@@ -587,11 +545,14 @@ class _AddUserState extends State<AddUser> {
                                                   : index == 5
                                                       ? dateController
                                                       : index == 6
-                                                          ? dateController
+                                                          ? designationController
                                                           : passwordController,
-                              decoration: InputDecoration(
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
-                                hintText: 'Enter username',
+                                hintText: 'Enter here',
                                 hintStyle:
                                     TextStyle(color: Colors.grey, fontSize: 14),
                               ),
