@@ -1,4 +1,5 @@
 import 'package:ag_financial_admin_pannel/admins.dart';
+import 'package:ag_financial_admin_pannel/agentleads.dart';
 import 'package:ag_financial_admin_pannel/agents.dart';
 import 'package:ag_financial_admin_pannel/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,7 +11,7 @@ import 'package:lottie/lottie.dart';
 import 'package:universal_html/html.dart';
 
 class Home extends StatefulWidget {
-   final String ids;
+  final String ids;
   const Home({
     super.key,
     required this.ids,
@@ -24,9 +25,10 @@ class _HomeState extends State<Home> {
   final CollectionReference Payments =
       FirebaseFirestore.instance.collection('leads');
 
-
-        String location = '';
-  String name='';
+  String location = '';
+  String name = '';
+  // ignore: non_constant_identifier_names
+  String Adminname = '';
   Future getadmindata() async {
     await FirebaseFirestore.instance
         .collection('admins')
@@ -37,6 +39,7 @@ class _HomeState extends State<Home> {
         setState(() {
           location = value.get('Location');
           name = value.get('userid');
+          Adminname = value.get('name');
         });
       }
     });
@@ -52,6 +55,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
         body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,51 +63,87 @@ class _HomeState extends State<Home> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(19.0),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 4, 63, 111),
-                    borderRadius: BorderRadius.circular(8)),
-                child: const Text(
-                  'Credit Cards',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 11, horizontal: 19),
+              child: width < 600
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome  ',
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(0.6),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          Adminname,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome  ',
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(0.6),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          Adminname,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
             ),
             Row(
               children: [
-                location=='ludhiana'?
-                Padding(
-                  padding: const EdgeInsets.all(19.0),
-                  child: InkWell(
-                    onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Admins()),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 11, vertical: 6),
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 4, 63, 111),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: const Text(
-                        'Admins',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500),
+                location == 'ludhiana'
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 19),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Admins()),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 11, vertical: 6),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 4, 63, 111),
+                                borderRadius: BorderRadius.circular(8)),
+                            child: const Text(
+                              'Admins',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      )
+                    : SizedBox(
+                        height: 1,
+                        width: 1,
                       ),
-                    ),
-                  ),
-                ):SizedBox(height: 1,width: 1,),
                 Padding(
                   padding: const EdgeInsets.all(19.0),
                   child: InkWell(
@@ -148,115 +188,138 @@ class _HomeState extends State<Home> {
                       : Axis.horizontal),
               children: List.generate(
                 4,
-                (index) => Container(
-                  height: height / 5.5,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(11),
-                      color: index == 0
-                          ? const Color.fromARGB(255, 237, 125, 117)
-                          : index == 1
-                              ? const Color.fromARGB(255, 97, 154, 201)
-                              : index == 2
-                                  ? const Color.fromARGB(255, 110, 226, 206)
-                                  : const Color.fromARGB(255, 198, 101, 215)),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              index == 0
-                                  ? 'Total Leads'
-                                  : index == 1
-                                      ? 'Sucess Leads'
-                                      : index == 2
-                                          ? 'Under Process'
-                                          : 'Pending Leads',
-                              style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            StreamBuilder(
-                                stream:
-                                 location=='ludhiana'? 
-                                 index == 0
-                                    ? Payments.snapshots()
+                (index) => InkWell(
+                  onTap: () {
+                    location == 'ludhiana'
+                    ?
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AgentsLead(password: 'jhh')),
+                      ):null; 
+                  },
+                  child: Container(
+                    height: width < 600 ? height / 4.5 : height / 5.5,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(11),
+                        color: index == 0
+                            ? const Color.fromARGB(255, 237, 125, 117)
+                            : index == 1
+                                ? const Color.fromARGB(255, 97, 154, 201)
+                                : index == 2
+                                    ? const Color.fromARGB(255, 110, 226, 206)
+                                    : const Color.fromARGB(255, 198, 101, 215)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                index == 0
+                                    ? 'Total Leads'
                                     : index == 1
-                                        ? Payments.where('application_status',
-                                                isEqualTo: 'sucess')
-                                            .snapshots()
-                                        : Payments.where('application_status',
-                                                isEqualTo: 'Pending')
-                                            .snapshots(): index == 0
-                                    ? Payments.where('location',isEqualTo: location).snapshots()
-                                    : index == 1
-                                        ? Payments.where('application_status',
-                                                isEqualTo: 'sucess').where('location',isEqualTo: location)
-                                            .snapshots()
-                                        : Payments.where('location',isEqualTo: location).where('application_status',
-                                                isEqualTo: 'Pending')
-                                            .snapshots(),
-                                builder: (context,
-                                    AsyncSnapshot<QuerySnapshot>
-                                        streamSnapshot) {
-                                  if (streamSnapshot.hasData) {
+                                        ? 'Sucess Leads'
+                                        : index == 2
+                                            ? 'Under Process'
+                                            : 'Pending Leads',
+                                style: TextStyle(
+                                    color: Colors.white.withOpacity(0.7),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              StreamBuilder(
+                                  stream: location == 'ludhiana'
+                                      ? index == 0
+                                          ? Payments.snapshots()
+                                          : index == 1
+                                              ? Payments.where(
+                                                      'application_status',
+                                                      isEqualTo: 'sucess')
+                                                  .snapshots()
+                                              :index == 2
+                                              ? Payments.where(
+                                                      'location',
+                                                      isEqualTo: '')
+                                                  .snapshots()
+                                              : Payments.where(
+                                                      'application_status',
+                                                      isEqualTo: 'Pending')
+                                                  .snapshots()
+                                      : index == 0
+                                          ? Payments.where('location',
+                                                  isEqualTo: location)
+                                              .snapshots()
+                                          : index == 1
+                                              ? Payments.where(
+                                                      'application_status',
+                                                      isEqualTo: 'sucess')
+                                                  .where('location',
+                                                      isEqualTo: location)
+                                                  .snapshots()
+                                              : Payments.where('location',
+                                                      isEqualTo: location)
+                                                  .where('application_status',
+                                                      isEqualTo: 'Pending')
+                                                  .snapshots(),
+                                  builder: (context,
+                                      AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                                    if (streamSnapshot.hasData) {
+                                      return Text(
+                                        (streamSnapshot.data!.docs.length)
+                                            .toString(),
+                                        style: TextStyle(
+                                            color: Colors.white.withOpacity(0.7),
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold),
+                                      );
+                                    }
                                     return Text(
-                                      (streamSnapshot.data!.docs.length)
-                                          .toString(),
+                                      '0',
                                       style: TextStyle(
                                           color: Colors.white.withOpacity(0.7),
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold),
                                     );
-                                  }
-                                  return Text(
-                                    '0',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.7),
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
-                                  );
-                                }),
-                            const SizedBox(
-                              height: 32,
-                            ),
-                            Text(
-                              'A.G.Financial Services',
-                              style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            Icon(
-                              index == 0
-                                  ? Icons.people
-                                  : index == 1
-                                      ? Icons.currency_exchange
-                                      : index == 2
-                                          ? Icons.ring_volume
-                                          : Icons.place,
-                              color: Colors.white,
-                              size: 33,
-                            ),
-                          ],
-                        ),
-                      ],
+                                  }),
+                              const SizedBox(
+                                height: 32,
+                              ),
+                              Text(
+                                'A.G.Financial Services',
+                                style: TextStyle(
+                                    color: Colors.white.withOpacity(0.7),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              Icon(
+                                index == 0
+                                    ? Icons.people
+                                    : index == 1
+                                        ? Icons.currency_exchange
+                                        : index == 2
+                                            ? Icons.ring_volume
+                                            : Icons.place,
+                                color: Colors.white,
+                                size: 33,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

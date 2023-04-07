@@ -1,5 +1,6 @@
 import 'package:ag_financial_admin_pannel/addagent.dart';
 import 'package:ag_financial_admin_pannel/agentleads.dart';
+import 'package:ag_financial_admin_pannel/attendancerecord.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lottie/lottie.dart';
@@ -40,8 +41,15 @@ class _AgentsState extends State<Agents> {
     });
   }
 
+  Future agentid(String id) async {
+    await FirebaseFirestore.instance
+        .collection('agents')
+        .doc(id)
+        .update({'mobile_id': ''});
+  }
+
   bool newuser = false;
-  bool agentlead = false;
+  //bool agentlead = false;
   String token = '';
   bool agents = false;
   bool password = false;
@@ -78,29 +86,64 @@ class _AgentsState extends State<Agents> {
                   SizedBox(
                     height: 20,
                   ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        newuser = true;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 41, bottom: 12),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 11, vertical: 6),
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 92, 154, 205),
-                            borderRadius: BorderRadius.circular(8)),
-                        child: const Text(
-                          'Add new agent',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            newuser = true;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 41, bottom: 12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 11, vertical: 6),
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 92, 154, 205),
+                                borderRadius: BorderRadius.circular(8)),
+                            child: const Text(
+                              'Add new agent',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 41, bottom: 12, right: 41),
+                        child: StreamBuilder(
+                            stream: location == 'ludhiana'
+                                ? chat.snapshots()
+                                : chat
+                                    .where('location', isEqualTo: location)
+                                    .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                              if (streamSnapshot.hasData) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 11, vertical: 6),
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 92, 154, 205),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Text(
+                                    'Total agents  :  ${streamSnapshot.data!.docs.length}',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            }),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -182,7 +225,7 @@ class _AgentsState extends State<Agents> {
                     ),
                   ),
                   SizedBox(
-                    height: height / 2,
+                    height: height / 1.3,
                     width: MediaQuery.of(context).size.width,
                     child: StreamBuilder(
                         stream: location == 'ludhiana'
@@ -217,8 +260,10 @@ class _AgentsState extends State<Agents> {
                                     onTap: () {
                                       setState(() {
                                         token = documentSnapshot['password'];
-                                        agentlead = true;
+                                        //agentlead = true;
                                       });
+                                      dialog(context,
+                                          documentSnapshot['password']);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -377,195 +422,303 @@ class _AgentsState extends State<Agents> {
               ));
   }
 
+  dialog(BuildContext context, id) {
+    var width = MediaQuery.of(context).size.width;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  height: 250,
+                  width: 300,
+                  child: Lottie.asset('assets/dddd.json',
+                      fit: BoxFit.cover, repeat: true),
+                ),
+                const SizedBox(
+                  height: 48,
+                ),
+                SizedBox(
+                  width: 250,
+                  child: MaterialButton(
+                    onPressed: () {
+                      agentid(id);
+
+                      Navigator.pop(context);
+                    },
+                    color: const Color.fromARGB(255, 4, 53, 94),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                      child: Text(
+                        'Change Device Id',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 250,
+                  child: MaterialButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Attendance(
+                                  ids: id,
+                                )),
+                      );
+                    },
+                    color: const Color.fromARGB(255, 4, 53, 94),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                      child: Text(
+                        'check Attendace',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
   mobileView(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          height: 20,
-        ),
-        InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddUser()),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 92, 154, 205),
-                  borderRadius: BorderRadius.circular(8)),
-              child: const Text(
-                'Add new agent',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500),
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddUser()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 92, 154, 205),
+                    borderRadius: BorderRadius.circular(8)),
+                child: const Text(
+                  'Add new agent',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
+                ),
               ),
             ),
           ),
-        ),
-        SizedBox(
-          height: height - 160,
-          width: MediaQuery.of(context).size.width,
-          child: StreamBuilder(
-              stream: chat.snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                if (streamSnapshot.hasData) {
-                  return ResponsiveGridList(
-                      horizontalGridSpacing:
-                          16, // Horizontal space between grid items
+          SizedBox(
+            height: height - 160,
+            width: MediaQuery.of(context).size.width,
+            child: StreamBuilder(
+                stream: chat.snapshots(),
+                builder:
+                    (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                  if (streamSnapshot.hasData) {
+                    return ResponsiveGridList(
+                        horizontalGridSpacing:
+                            16, // Horizontal space between grid items
 
-                      horizontalGridMargin:
-                          10, // Horizontal space around the grid
-                      verticalGridMargin: 10, // Vertical space around the grid
-                      minItemWidth:
-                          400, // The minimum item width (can be smaller, if the layout constraints are smaller)
-                      minItemsPerRow:
-                          1, // The minimum items to show in a single row. Takes precedence over minItemWidth
-                      maxItemsPerRow:
-                          1, // The maximum items to show in a single row. Can be useful on large screens
-                      listViewBuilderOptions:
-                          ListViewBuilderOptions(), // Options that are getting passed to the ListView.builder() function
-                      children: List.generate(streamSnapshot.data!.docs.length,
-                          (index) {
-                        final DocumentSnapshot documentSnapshot =
-                            streamSnapshot.data!.docs[index];
-                        return Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5), //New
-                                    blurRadius: 1,
-                                    spreadRadius: 1)
-                              ],
-                              borderRadius: BorderRadius.circular(5)),
-                          height: height / 4,
-                          //color: Colors.amber,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 0),
-                                      child: Text(
-                                        'User Id',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                    Text(
-                                      'User Name',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      'Address',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      'Mobile Number',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      'Registration Date',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      'Password',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                        horizontalGridMargin:
+                            10, // Horizontal space around the grid
+                        verticalGridMargin:
+                            10, // Vertical space around the grid
+                        minItemWidth:
+                            400, // The minimum item width (can be smaller, if the layout constraints are smaller)
+                        minItemsPerRow:
+                            1, // The minimum items to show in a single row. Takes precedence over minItemWidth
+                        maxItemsPerRow:
+                            1, // The maximum items to show in a single row. Can be useful on large screens
+                        listViewBuilderOptions:
+                            ListViewBuilderOptions(), // Options that are getting passed to the ListView.builder() function
+                        children: List.generate(
+                            streamSnapshot.data!.docs.length, (index) {
+                          final DocumentSnapshot documentSnapshot =
+                              streamSnapshot.data!.docs[index];
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Attendance(
+                                          ids: documentSnapshot['password'],
+                                        )),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color:
+                                            Colors.grey.withOpacity(0.5), //New
+                                        blurRadius: 1,
+                                        spreadRadius: 1)
                                   ],
-                                ),
-                                Column(
-                                  //crossAxisAlignment: CrossAxisAlignment.,
+                                  borderRadius: BorderRadius.circular(5)),
+                              height: height / 4,
+                              //color: Colors.amber,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      documentSnapshot['userid'],
-                                      style: TextStyle(
-                                          color: Colors.black.withOpacity(0.5),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: const [
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 0),
+                                          child: Text(
+                                            'User Id',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ),
+                                        Text(
+                                          'User Name',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Address',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Mobile Number',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Registration Date',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Password',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      documentSnapshot['name'],
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black.withOpacity(0.5)),
-                                    ),
-                                    Text(
-                                      documentSnapshot['Area'],
-                                      style: TextStyle(
-                                          color: Colors.black.withOpacity(0.5),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      documentSnapshot['mobile_number'],
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black.withOpacity(0.5)),
-                                    ),
-                                    Text(
-                                      '11-08-2022',
-                                      style: TextStyle(
-                                          color: Colors.black.withOpacity(0.5),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      documentSnapshot['password'],
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black.withOpacity(0.5)),
+                                    Column(
+                                      //crossAxisAlignment: CrossAxisAlignment.,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          documentSnapshot['userid'],
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          documentSnapshot['name'],
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black
+                                                  .withOpacity(0.5)),
+                                        ),
+                                        Text(
+                                          documentSnapshot['Area'],
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          documentSnapshot['mobile_number'],
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black
+                                                  .withOpacity(0.5)),
+                                        ),
+                                        Text(
+                                          '11-08-2022',
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          documentSnapshot['password'],
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black
+                                                  .withOpacity(0.5)),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ); // The list of widgets in the list
-                      }));
-                }
-                return Center(child: CircularProgressIndicator());
-              }),
-        )
-      ],
+                          ); // The list of widgets in the list
+                        }));
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }),
+          )
+        ],
+      ),
     );
   }
 }

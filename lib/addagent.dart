@@ -77,19 +77,20 @@ class _AddUserState extends State<AddUser> {
       'mobile_number': mobilenumberController.text,
       'designation': designationController.text,
       'register_date': dateController.text,
+      'mobile_id':''
     }).whenComplete(() {});
   }
 
   Future check() async {
     final Query query = FirebaseFirestore.instance
         .collection('agents')
-        .where('userid', isEqualTo: useridController.text);
+        .where('password', isEqualTo: passwordController.text);
 
     query.get().then((querySnapshot) {
       if (querySnapshot.size > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('This userid is already exist'),
+            content: const Text('This Password is already exist'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: const EdgeInsets.all(10),
@@ -109,7 +110,7 @@ class _AddUserState extends State<AddUser> {
     });
   }
 
-  DateTime selectedDate = DateTime(2050, 1);
+  DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -356,78 +357,6 @@ class _AddUserState extends State<AddUser> {
     );
   }
 
-  dialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  height: 250,
-                  width: 300,
-                  child: Lottie.asset('assets/sucess.json',
-                      fit: BoxFit.cover, repeat: true),
-                ),
-                const SizedBox(
-                  height: 48,
-                ),
-                const Text(
-                  "You'r all set!",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const SizedBox(
-                  width: 250,
-                  child: Text(
-                    'Click ok button to add new agent',
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Color.fromARGB(255, 94, 94, 94),
-                        fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: 250,
-                  child: MaterialButton(
-                    onPressed: () {
-                      check();
-                      Navigator.pop(context);
-                    },
-                    color: const Color.fromARGB(255, 4, 53, 94),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 7, horizontal: 80),
-                      child: Text(
-                        'ok',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
   mobileView(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
@@ -465,7 +394,7 @@ class _AddUserState extends State<AddUser> {
             ),
           ),
           SizedBox(
-            height: height / 1.4,
+            height: height / 1.6,
             child: ResponsiveGridList(
                 horizontalGridSpacing: 16,
                 horizontalGridMargin: 20,
@@ -532,6 +461,11 @@ class _AddUserState extends State<AddUser> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 15, bottom: 11),
                             child: TextField(
+                              onTap: index == 5
+                                  ? () {
+                                      _selectDate(context);
+                                    }
+                                  : () {},
                               controller: index == 0
                                   ? useridController
                                   : index == 1
@@ -547,9 +481,18 @@ class _AddUserState extends State<AddUser> {
                                                       : index == 6
                                                           ? designationController
                                                           : passwordController,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
+                              inputFormatters: index == 4
+                                  ? <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      LengthLimitingTextInputFormatter(10)
+                                    ]
+                                  : index == 5
+                                      ? <TextInputFormatter>[
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                          LengthLimitingTextInputFormatter(10)
+                                        ]
+                                      : <TextInputFormatter>[],
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Enter here',
@@ -585,7 +528,7 @@ class _AddUserState extends State<AddUser> {
                       emailController.text.isNotEmpty &&
                       designationController.text.isNotEmpty &&
                       passwordController.text.isNotEmpty) {
-                    newAgent();
+                    check();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

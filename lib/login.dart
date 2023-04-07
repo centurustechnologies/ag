@@ -296,19 +296,22 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(50.0),
-                        //   child: SizedBox(
-                        //     width: 270,
-                        //     child: Text(
-                        //       'If you are not register than yoy are not admin,stay away from this pannel',
-                        //       style: TextStyle(
-                        //           color: Colors.black.withOpacity(0.6),
-                        //           fontSize: 12,
-                        //           fontWeight: FontWeight.w400),
-                        //     ),
-                        //   ),
-                        // ),
+                        SizedBox(
+                          height: 70,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(40.0),
+                          child: SizedBox(
+                            width: 270,
+                            child: Text(
+                              'If you are not register than yoy are not admin,stay away from this pannel',
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(0.6),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -477,12 +480,13 @@ class _LoginState extends State<Login> {
             color: Colors.white,
           ),
           child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 50, top: 20),
+                    padding: const EdgeInsets.only(left: 30, top: 20),
                     child: Container(
                       height: 80,
                       width: 200,
@@ -498,7 +502,7 @@ class _LoginState extends State<Login> {
                 height: height / 11,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 45),
+                padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -539,7 +543,7 @@ class _LoginState extends State<Login> {
                 height: 30,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 45),
+                padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -554,10 +558,11 @@ class _LoginState extends State<Login> {
                       width: 300,
                       height: 40,
                       child: Padding(
-                        padding: EdgeInsets.only(bottom: 4),
+                        padding: const EdgeInsets.only(bottom: 4),
                         child: TextField(
                           controller: password,
-                          decoration: InputDecoration(
+                          obscureText: true,
+                          decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                 color: Color.fromARGB(255, 15, 59, 94),
@@ -576,7 +581,7 @@ class _LoginState extends State<Login> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 50, top: 30),
+                padding: const EdgeInsets.only(left: 25, top: 30),
                 child: Row(
                   children: [
                     Text(
@@ -587,7 +592,7 @@ class _LoginState extends State<Login> {
                           fontWeight: FontWeight.w400),
                     ),
                     const SizedBox(
-                      width: 80,
+                      width: 40,
                     ),
                     MaterialButton(
                       shape: const RoundedRectangleBorder(
@@ -615,11 +620,13 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-              Spacer(),
+              const SizedBox(
+                height: 50,
+              ),
               Padding(
-                padding: const EdgeInsets.all(45.0),
+                padding: const EdgeInsets.all(20.0),
                 child: SizedBox(
-                  width: 240,
+                  width: width,
                   child: Text(
                     'If you are not register than yoy are not admin,stay away from this pannel',
                     style: TextStyle(

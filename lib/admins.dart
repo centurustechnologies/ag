@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lottie/lottie.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class Admins extends StatefulWidget {
@@ -32,6 +33,17 @@ class _AdminsState extends State<Admins> {
 
   @override
   Widget build(BuildContext context) {
+    // var height = MediaQuery.of(context).size.height;
+    // var width = MediaQuery.of(context).size.width;
+    // ignore: deprecated_member_use
+    return ScreenTypeLayout(
+      mobile: mobileView(context),
+      tablet: mobileView(context),
+      desktop: desktopview(context),
+    );
+  }
+
+  desktopview(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -339,6 +351,237 @@ class _AdminsState extends State<Admins> {
     );
   }
 
+  mobileView(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 3, 30, 52),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminControl()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 92, 154, 205),
+                    borderRadius: BorderRadius.circular(8)),
+                child: const Text(
+                  'Add new Admin',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: height - 160,
+            width: MediaQuery.of(context).size.width,
+            child: StreamBuilder(
+                stream: chat.snapshots(),
+                builder:
+                    (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                  if (streamSnapshot.hasData) {
+                    return ResponsiveGridList(
+                        horizontalGridSpacing:
+                            16, // Horizontal space between grid items
+
+                        horizontalGridMargin:
+                            10, // Horizontal space around the grid
+                        verticalGridMargin:
+                            10, // Vertical space around the grid
+                        minItemWidth:
+                            400, // The minimum item width (can be smaller, if the layout constraints are smaller)
+                        minItemsPerRow:
+                            1, // The minimum items to show in a single row. Takes precedence over minItemWidth
+                        maxItemsPerRow:
+                            1, // The maximum items to show in a single row. Can be useful on large screens
+                        listViewBuilderOptions:
+                            ListViewBuilderOptions(), // Options that are getting passed to the ListView.builder() function
+                        children: List.generate(
+                            streamSnapshot.data!.docs.length, (index) {
+                          final DocumentSnapshot documentSnapshot =
+                              streamSnapshot.data!.docs[index];
+                          return InkWell(
+                            onTap: () {
+                              dialog(context, documentSnapshot.id);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color:
+                                            Colors.grey.withOpacity(0.5), //New
+                                        blurRadius: 1,
+                                        spreadRadius: 1)
+                                  ],
+                                  borderRadius: BorderRadius.circular(5)),
+                              height: height / 4,
+                              //color: Colors.amber,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: const [
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 0),
+                                          child: Text(
+                                            'User Id',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ),
+                                        Text(
+                                          'User Name',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Location',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Mobile Number',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Registration Date',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Email',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          'Password',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      //crossAxisAlignment: CrossAxisAlignment.,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          documentSnapshot['userid'],
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          documentSnapshot['name'],
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black
+                                                  .withOpacity(0.5)),
+                                        ),
+                                        Text(
+                                          documentSnapshot['Location'],
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          documentSnapshot['mobile_number'],
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black
+                                                  .withOpacity(0.5)),
+                                        ),
+                                        Text(
+                                          documentSnapshot['register_date'],
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          documentSnapshot['email'],
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          documentSnapshot['password'],
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black
+                                                  .withOpacity(0.5)),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ); // The list of widgets in the list
+                        }));
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }),
+          )
+        ],
+      ),
+    );
+  }
+
   dialog(BuildContext context, id) {
     var width = MediaQuery.of(context).size.width;
     return showDialog(
@@ -363,7 +606,7 @@ class _AdminsState extends State<Admins> {
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
                     height: 50,
-                    width: width / 5.5,
+                    width: 300,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.white,
@@ -411,8 +654,13 @@ class _AdminsState extends State<Admins> {
                   width: 250,
                   child: MaterialButton(
                     onPressed: () {
-                      changepass(id);
-                      Navigator.pop(context);
+                      if (changepasscontroller.text.isNotEmpty) {
+                        changepass(id);
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pop(context);
+                      }
+
                       //dialog1(context);
                     },
                     color: const Color.fromARGB(255, 4, 53, 94),

@@ -119,6 +119,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
 
   @override
   Widget build(BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return SidebarX(
       controller: widget._controller,
       theme: SidebarXTheme(
@@ -159,44 +160,58 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
       ),
       footerDivider: divider,
       headerBuilder: (context, extended) {
-        return SizedBox(
-          height: 150,
-          child: Image.asset(
-            'assets/logo7.png',
-            //fit: BoxFit.cover,
-          ),
-        );
+        return extended
+            ? SizedBox(
+                height: 150,
+                child: Image.asset(
+                  'assets/logo7.png',
+                  //fit: BoxFit.cover,
+                ),
+              )
+            : SizedBox(
+                height: 150,
+                child: Image.asset(
+                  'assets/logo8.png',
+                  //fit: BoxFit.cover,
+                ),
+              );
       },
       items: [
         SidebarXItem(
           icon: Icons.home,
           label: 'Home',
-          onTap: () {},
+          onTap: () {
+            isSmallScreen ? Navigator.pop(context) : null;
+          },
         ),
         SidebarXItem(
           icon: Icons.leaderboard,
           label: 'Leads',
           onTap: () {
-            //getadmindata(localtoken);
+            isSmallScreen ? Navigator.pop(context) : null;
           },
         ),
         SidebarXItem(
           icon: Icons.support_agent,
           label: 'Agents',
           onTap: () {
-            //getadmindata(localtoken);
+            isSmallScreen ? Navigator.pop(context) : null;
           },
         ),
         SidebarXItem(
           icon: Icons.credit_card,
           label: 'Banks',
-          onTap: () {},
+          onTap: () {
+            isSmallScreen ? Navigator.pop(context) : null;
+          },
         ),
-        SidebarXItem(
-          icon: Icons.countertops,
-          label: 'companies',
-          onTap: () {},
-        ),
+        // SidebarXItem(
+        //   icon: Icons.countertops,
+        //   label: 'companies',
+        //   onTap: () {
+        //     isSmallScreen?Navigator.pop(context):null;
+        //   },
+        // ),
       ],
     );
   }
@@ -261,10 +276,8 @@ class _ScreensExampleState extends State<_ScreensExample> {
               ids: localtoken,
             );
 
-          case 3:
-            return const Bro();
           default:
-            return const Report();
+            return const Bro();
         }
       },
     );

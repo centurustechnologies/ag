@@ -40,7 +40,8 @@ class _AdminControlState extends State<AdminControl> {
       'register_date': dateController.text,
     }).whenComplete(() {});
   }
-  bool admin=false;
+
+  bool admin = false;
 
   Future check() async {
     final Query query = FirebaseFirestore.instance
@@ -62,16 +63,16 @@ class _AdminControlState extends State<AdminControl> {
       } else {
         newAdmin();
         Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SidebarXExampleApp()),
-                      );
+          context,
+          MaterialPageRoute(builder: (context) => const SidebarXExampleApp()),
+        );
       }
     }).catchError((error) {
       // Handle any errors
     });
   }
 
-  DateTime selectedDate = DateTime(2050, 1);
+  DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -100,210 +101,209 @@ class _AdminControlState extends State<AdminControl> {
   desktopView(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return  Row(
-        children: [
-          const SizedBox(
-            width: 70,
-          ),
-          SizedBox(
-            height: height,
-            width: width / 1.9,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    height: 43,
-                    width: 700,
-                    color: Colors.blue.withOpacity(0.1),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          'Add New Admins',
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
+    return Row(
+      children: [
+        const SizedBox(
+          width: 70,
+        ),
+        SizedBox(
+          height: height,
+          width: width / 1.9,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  height: 43,
+                  width: 700,
+                  color: Colors.blue.withOpacity(0.1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        'Add New Admins',
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(
-                  height: height / 1.5,
-                  child: ResponsiveGridList(
-                      horizontalGridSpacing: 16,
-                      horizontalGridMargin: 20,
-                      minItemWidth: 270,
-                      minItemsPerRow: 1,
-                      maxItemsPerRow: 1,
-                      listViewBuilderOptions: ListViewBuilderOptions(
-                          scrollDirection: Axis.vertical),
-                      children: List.generate(
-                        7,
-                        (index) => SizedBox(
-                          height: 70,
-                          width: width / 2.5,
-                          child: Row(children: [
-                            const Icon(
-                              Icons.star,
-                              color: Colors.amber,
+              ),
+              SizedBox(
+                height: height / 1.5,
+                child: ResponsiveGridList(
+                    horizontalGridSpacing: 16,
+                    horizontalGridMargin: 20,
+                    minItemWidth: 270,
+                    minItemsPerRow: 1,
+                    maxItemsPerRow: 1,
+                    listViewBuilderOptions:
+                        ListViewBuilderOptions(scrollDirection: Axis.vertical),
+                    children: List.generate(
+                      7,
+                      (index) => SizedBox(
+                        height: 70,
+                        width: width / 2.5,
+                        child: Row(children: [
+                          const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          SizedBox(
+                            width: 140,
+                            child: Text(
+                              index == 0
+                                  ? 'Username'
+                                  : index == 1
+                                      ? 'Name'
+                                      : index == 2
+                                          ? 'Email'
+                                          : index == 3
+                                              ? 'Mobile Number'
+                                              : index == 4
+                                                  ? 'Register date'
+                                                  : index == 5
+                                                      ? 'Location'
+                                                      : 'Password',
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(0.7),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.start,
                             ),
-                            SizedBox(
-                              width: 140,
-                              child: Text(
-                                index == 0
-                                    ? 'Username'
-                                    : index == 1
-                                        ? 'Name'
-                                        : index == 2
-                                            ? 'Email'
-                                            : index == 3
-                                                ? 'Mobile Number'
-                                                : index == 4
-                                                    ? 'Register date'
-                                                    : index == 5
-                                                        ? 'Location'
-                                                        : 'Password',
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(0.7),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600),
-                                textAlign: TextAlign.start,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                height: 60,
-                                width: width / 3,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: const Color.fromARGB(
-                                                  255, 102, 100, 100)
-                                              .withOpacity(0.4),
-                                          spreadRadius: 1,
-                                          blurRadius: 1)
-                                    ]),
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 15, bottom: 6),
-                                  child: TextField(
-                                    onTap: index == 4
-                                        ? () {
-                                            _selectDate(context);
-                                          }
-                                        : () {},
-                                    controller: index == 0
-                                        ? useridController
-                                        : index == 1
-                                            ? firstnameController
-                                            : index == 2
-                                                ? emailController
-                                                : index == 3
-                                                    ? mobilenumberController
-                                                    : index == 4
-                                                        ? dateController
-                                                        : index == 5
-                                                            ? designationController
-                                                            : passwordController,
-                                    inputFormatters: index == 3
-                                        ? <TextInputFormatter>[
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
-                                            LengthLimitingTextInputFormatter(10)
-                                          ]
-                                        : <TextInputFormatter>[],
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Enter here',
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey, fontSize: 14),
-                                    ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              height: 60,
+                              width: width / 3,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: const Color.fromARGB(
+                                                255, 102, 100, 100)
+                                            .withOpacity(0.4),
+                                        spreadRadius: 1,
+                                        blurRadius: 1)
+                                  ]),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 15, bottom: 6),
+                                child: TextField(
+                                  onTap: index == 4
+                                      ? () {
+                                          _selectDate(context);
+                                        }
+                                      : () {},
+                                  controller: index == 0
+                                      ? useridController
+                                      : index == 1
+                                          ? firstnameController
+                                          : index == 2
+                                              ? emailController
+                                              : index == 3
+                                                  ? mobilenumberController
+                                                  : index == 4
+                                                      ? dateController
+                                                      : index == 5
+                                                          ? designationController
+                                                          : passwordController,
+                                  inputFormatters: index == 3
+                                      ? <TextInputFormatter>[
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                          LengthLimitingTextInputFormatter(10)
+                                        ]
+                                      : <TextInputFormatter>[],
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Enter here',
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey, fontSize: 14),
                                   ),
                                 ),
                               ),
                             ),
-                          ]),
-                        ),
-                      )),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-                  child: Container(
-                    height: 48,
-                    width: width / 4.5,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
-                      gradient: const LinearGradient(colors: [
-                        Colors.blue,
-                        Color.fromARGB(255, 8, 71, 123)
-                      ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-                    ),
-                    child: MaterialButton(
-                      onPressed: () {
-                        if (firstnameController.text.isNotEmpty &&
-                            mobilenumberController.text.isNotEmpty &&
-                            useridController.text.isNotEmpty &&
-                            emailController.text.isNotEmpty &&
-                            designationController.text.isNotEmpty &&
-                            passwordController.text.isNotEmpty) {
-                          check();
-                          //useridAdmin();
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                  'Please fill all mandatory fields'),
-                              backgroundColor: Colors.red,
-                              behavior: SnackBarBehavior.floating,
-                              margin: const EdgeInsets.all(10),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          );
-                        }
-                        //newAgent();
-                      },
-                      //color: Colors.blue,
-                      height: 38,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              'Add User',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ]),
+                      ),
+                    )),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                child: Container(
+                  height: 48,
+                  width: width / 4.5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(0),
+                    gradient: const LinearGradient(
+                        colors: [Colors.blue, Color.fromARGB(255, 8, 71, 123)],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight),
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      if (firstnameController.text.isNotEmpty &&
+                          mobilenumberController.text.isNotEmpty &&
+                          useridController.text.isNotEmpty &&
+                          emailController.text.isNotEmpty &&
+                          designationController.text.isNotEmpty &&
+                          passwordController.text.isNotEmpty) {
+                        check();
+                        //useridAdmin();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                const Text('Please fill all mandatory fields'),
+                            backgroundColor: Colors.red,
+                            behavior: SnackBarBehavior.floating,
+                            margin: const EdgeInsets.all(10),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        );
+                      }
+                      //newAgent();
+                    },
+                    //color: Colors.blue,
+                    height: 38,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            'Add User',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      );
-    
+        ),
+      ],
+    );
   }
 
   dialog(BuildContext context, id) {
@@ -330,7 +330,7 @@ class _AdminControlState extends State<AdminControl> {
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
                     height: 50,
-                    width: width / 5.5,
+                    width: 300, //,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.white,
@@ -341,7 +341,7 @@ class _AdminControlState extends State<AdminControl> {
                               spreadRadius: 1,
                               blurRadius: 1)
                         ]),
-                    child: Padding(
+                    child: const Padding(
                       padding: EdgeInsets.only(left: 15, bottom: 2),
                       child: TextField(
                         keyboardType: TextInputType.text,
@@ -430,7 +430,7 @@ class _AdminControlState extends State<AdminControl> {
                     width: 12,
                   ),
                   Text(
-                    'Add New Agent',
+                    'Add New Admin',
                     style: TextStyle(
                         color: Colors.blue,
                         fontSize: 15,
@@ -441,7 +441,7 @@ class _AdminControlState extends State<AdminControl> {
             ),
           ),
           SizedBox(
-            height: height / 1.4,
+            height: height / 1.6,
             child: ResponsiveGridList(
                 horizontalGridSpacing: 16,
                 horizontalGridMargin: 20,
@@ -451,7 +451,7 @@ class _AdminControlState extends State<AdminControl> {
                 listViewBuilderOptions:
                     ListViewBuilderOptions(scrollDirection: Axis.vertical),
                 children: List.generate(
-                  8,
+                  7,
                   (index) => SizedBox(
                     height: 85,
                     width: width / 2.5,
@@ -468,18 +468,16 @@ class _AdminControlState extends State<AdminControl> {
                               index == 0
                                   ? 'Username'
                                   : index == 1
-                                      ? 'First Name'
+                                      ? 'Name'
                                       : index == 2
-                                          ? 'Last Name'
+                                          ? 'Email'
                                           : index == 3
-                                              ? 'Email'
+                                              ? 'Mobile Number'
                                               : index == 4
-                                                  ? 'Mobile Number'
+                                                  ? 'Register date'
                                                   : index == 5
-                                                      ? 'Register date'
-                                                      : index == 6
-                                                          ? 'Designation'
-                                                          : 'Password',
+                                                      ? 'Location'
+                                                      : 'Password',
                               style: TextStyle(
                                   color: Colors.black.withOpacity(0.7),
                                   fontSize: 15,
@@ -508,19 +506,33 @@ class _AdminControlState extends State<AdminControl> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 15, bottom: 11),
                             child: TextField(
+                              inputFormatters: index == 3
+                                  ? <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      LengthLimitingTextInputFormatter(10)
+                                    ]
+                                  : <TextInputFormatter>[],
+                              onTap: index == 4
+                                  ? () {
+                                      _selectDate(context);
+                                    }
+                                  : () {},
                               controller: index == 0
                                   ? useridController
                                   : index == 1
                                       ? firstnameController
-                                      : index == 3
+                                      : index == 2
                                           ? emailController
-                                          : index == 4
+                                          : index == 3
                                               ? mobilenumberController
-                                              : index == 5
+                                              : index == 4
                                                   ? dateController
-                                                  : index == 6
-                                                      ? dateController
+                                                  : index == 5
+                                                      ? designationController
                                                       : passwordController,
+                              keyboardType: index == 3
+                                  ? TextInputType.number
+                                  : TextInputType.emailAddress,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Enter username',
@@ -556,7 +568,7 @@ class _AdminControlState extends State<AdminControl> {
                       emailController.text.isNotEmpty &&
                       designationController.text.isNotEmpty &&
                       passwordController.text.isNotEmpty) {
-                    newAdmin();
+                    check();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
