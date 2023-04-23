@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:universal_html/html.dart';
 
+import 'walle.dart';
 import 'report.dart';
 
 class SidebarXExampleApp extends StatefulWidget {
@@ -205,13 +206,13 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
             isSmallScreen ? Navigator.pop(context) : null;
           },
         ),
-        // SidebarXItem(
-        //   icon: Icons.countertops,
-        //   label: 'companies',
-        //   onTap: () {
-        //     isSmallScreen?Navigator.pop(context):null;
-        //   },
-        // ),
+        SidebarXItem(
+          icon: Icons.credit_card,
+          label: 'Wallet',
+          onTap: () {
+            isSmallScreen ? Navigator.pop(context) : null;
+          },
+        ),
       ],
     );
   }
@@ -275,9 +276,13 @@ class _ScreensExampleState extends State<_ScreensExample> {
             return Agents(
               ids: localtoken,
             );
+          case 3:
+            return Bro();
 
           default:
-            return const Bro();
+            return Wallet(
+              ids: localtoken,
+            );
         }
       },
     );

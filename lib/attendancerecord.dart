@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:lottie/lottie.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
@@ -21,6 +22,25 @@ class _AttendanceState extends State<Attendance> {
       FirebaseFirestore.instance.collection('agents');
   TextEditingController searchcontroller = TextEditingController();
   String search = '';
+
+  Future updateattendance(String id) async {
+    await FirebaseFirestore.instance
+        .collection('agents')
+        .doc(widget.ids)
+        .collection('attendance')
+        .doc(id)
+        .update({'status': 'Absent'});
+  }
+
+  Future updateattendanceagain(String id) async {
+    await FirebaseFirestore.instance
+        .collection('agents')
+        .doc(widget.ids)
+        .collection('attendance')
+        .doc(id)
+        .update({'status': 'Present'});
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
@@ -207,6 +227,17 @@ class _AttendanceState extends State<Attendance> {
                         textAlign: TextAlign.start,
                       ),
                     ),
+                    SizedBox(
+                      width: width / 9,
+                      child: const Text(
+                        'Status',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -335,6 +366,55 @@ class _AttendanceState extends State<Attendance> {
                                               textAlign: TextAlign.start,
                                             ),
                                           ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 100,
+                                                child: Text(
+                                                  documentSnapshot['status'],
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Colors.black
+                                                          .withOpacity(0.9)),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 2),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    dialog(context,
+                                                        documentSnapshot.id);
+                                                  },
+                                                  child: Container(
+                                                      height: 36,
+                                                      width: 40,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(12),
+                                                          color: const Color
+                                                                  .fromARGB(255,
+                                                              25, 120, 198),
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.2))),
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons.edit,
+                                                          color: Colors.white,
+                                                        ),
+                                                      )),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ],
@@ -352,6 +432,96 @@ class _AttendanceState extends State<Attendance> {
             )
           ],
         ));
+  }
+
+  dialog(BuildContext context, id) {
+    var width = MediaQuery.of(context).size.width;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 35,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 250,
+                  width: 300,
+                  child: Lottie.asset('assets/dddd.json',
+                      fit: BoxFit.cover, repeat: true),
+                ),
+                const SizedBox(
+                  height: 48,
+                ),
+                SizedBox(
+                  width: 250,
+                  child: MaterialButton(
+                    onPressed: () {
+                      updateattendanceagain(id);
+                      Navigator.pop(context);
+                      //dialog2(context, id);
+                    },
+                    color: const Color.fromARGB(255, 4, 53, 94),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                      child: Text(
+                        'Mark As Present',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 250,
+                  child: MaterialButton(
+                    onPressed: () {
+                      updateattendance(id);
+                      Navigator.pop(context);
+                    },
+                    color: const Color.fromARGB(255, 4, 53, 94),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                      child: Text(
+                        'Mark As Absent',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   mobileView(BuildContext context) {

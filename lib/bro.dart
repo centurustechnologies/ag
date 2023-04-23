@@ -133,7 +133,8 @@ class _BroState extends State<Bro> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return mobilebankupload
-        ? Container(
+        ?
+         Container(
             color: Colors.blue.withOpacity(0.1),
             width: width,
             child: Column(

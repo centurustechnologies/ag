@@ -41,6 +41,9 @@ class _AgentsState extends State<Agents> {
     });
   }
 
+  
+ 
+
   Future agentid(String id) async {
     await FirebaseFirestore.instance
         .collection('agents')
@@ -358,9 +361,9 @@ class _AgentsState extends State<Agents> {
                                                             FontWeight.w500),
                                                     textAlign: TextAlign.start,
                                                   ),
-                                                ),
-                                                password
-                                                    ? InkWell(
+                                                ),password||
+                                              documentSnapshot.id==documentSnapshot.id ?
+                                                InkWell(
                                                         onTap: () {
                                                           setState(() {
                                                             password = false;
@@ -405,6 +408,7 @@ class _AgentsState extends State<Agents> {
                                                           ),
                                                         ),
                                                       )
+                                                      
                                               ],
                                             ),
                                           ],
@@ -433,6 +437,20 @@ class _AgentsState extends State<Agents> {
             title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                  Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 35,
+                      ),
+                    ),
+                  ],
+                ),
                 Container(
                   height: 250,
                   width: 300,
@@ -473,6 +491,7 @@ class _AgentsState extends State<Agents> {
                   width: 250,
                   child: MaterialButton(
                     onPressed: () {
+                      Navigator.pop(context);
                       Navigator.push(
                         context,
                         MaterialPageRoute(

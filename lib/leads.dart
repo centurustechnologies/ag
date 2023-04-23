@@ -70,8 +70,6 @@ class _LeadsState extends State<Leads> {
     });
   }
 
-
-
   String location = '';
   String name = '';
   Future getadmindata() async {
@@ -92,10 +90,8 @@ class _LeadsState extends State<Leads> {
   @override
   void initState() {
     // TODO: implement initState
-      getadmindata();
+    getadmindata();
     super.initState();
-
-  
   }
 
   @override
@@ -118,6 +114,20 @@ class _LeadsState extends State<Leads> {
             title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 35,
+                      ),
+                    ),
+                  ],
+                ),
                 Container(
                   height: 250,
                   width: 300,
@@ -221,6 +231,20 @@ class _LeadsState extends State<Leads> {
             title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 35,
+                      ),
+                    ),
+                  ],
+                ),
                 Container(
                   height: 250,
                   width: 300,
@@ -326,6 +350,20 @@ class _LeadsState extends State<Leads> {
             title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 35,
+                      ),
+                    ),
+                  ],
+                ),
                 Container(
                   height: 250,
                   width: 300,
@@ -395,8 +433,7 @@ class _LeadsState extends State<Leads> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    return
-     Container(
+    return Container(
       padding: const EdgeInsets.all(15),
       child: SizedBox(
         height: height,
@@ -606,7 +643,7 @@ class _LeadsState extends State<Leads> {
                                         element['userid']
                                             .toString()
                                             .toLowerCase()
-                                            .contains(search)||
+                                            .contains(search) ||
                                         element['token']
                                             .toString()
                                             .toLowerCase()
@@ -636,7 +673,8 @@ class _LeadsState extends State<Leads> {
                                   documentSnapshot['userid']
                                       .toString()
                                       .toLowerCase()
-                                      .startsWith(search) ||documentSnapshot['token']
+                                      .startsWith(search) ||
+                                  documentSnapshot['token']
                                       .toString()
                                       .toLowerCase()
                                       .startsWith(search)) {
@@ -859,7 +897,7 @@ class _LeadsState extends State<Leads> {
                                                                             : index == 5
                                                                                 ? documentSnapshot['pin_code']
                                                                                 : index == 6
-                                                                                    ? documentSnapshot['current_adress']
+                                                                                    ? documentSnapshot['current_adress'] + documentSnapshot['state']
                                                                                     : index == 7
                                                                                         ? documentSnapshot['landmark']
                                                                                         : index == 8
@@ -877,12 +915,12 @@ class _LeadsState extends State<Leads> {
                                                                                                                 : index == 14
                                                                                                                     ? documentSnapshot['gross_monthly_icome']
                                                                                                                     : index == 15
-                                                                                                                    ? documentSnapshot['yearly_return_details']
-                                                                                                                    : index == 16
-                                                                                                                    ? "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}"
-                                                                                                                    : index == 17
-                                                                                                                    ? documentSnapshot['lead_id']
-                                                                                                                    : documentSnapshot.id,
+                                                                                                                        ? documentSnapshot['yearly_return_details']
+                                                                                                                        : index == 16
+                                                                                                                            ? documentSnapshot['last_name']
+                                                                                                                            : index == 17
+                                                                                                                                ? documentSnapshot['lead_id']
+                                                                                                                                : documentSnapshot.id,
                                                         style: TextStyle(
                                                             fontSize: 13,
                                                             fontWeight:
@@ -1045,22 +1083,7 @@ class _LeadsState extends State<Leads> {
                           listViewBuilderOptions:
                               ListViewBuilderOptions(), // Options that are getting passed to the ListView.builder() function
                           children: List.generate(
-                             streamSnapshot.data!.docs
-                                    .where((element) =>
-                                        element['first_name']
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(search) ||
-                                        element['userid']
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(search)||
-                                        element['token']
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(search))
-                                    .length, (index) {
-                              final filteredData = streamSnapshot.data!.docs
+                              streamSnapshot.data!.docs
                                   .where((element) =>
                                       element['first_name']
                                           .toString()
@@ -1073,21 +1096,37 @@ class _LeadsState extends State<Leads> {
                                       element['token']
                                           .toString()
                                           .toLowerCase()
-                                          .contains(search));
-                              final documentSnapshot =
-                                  filteredData.elementAt(index);
+                                          .contains(search))
+                                  .length, (index) {
+                            final filteredData = streamSnapshot.data!.docs
+                                .where((element) =>
+                                    element['first_name']
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(search) ||
+                                    element['userid']
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(search) ||
+                                    element['token']
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(search));
+                            final documentSnapshot =
+                                filteredData.elementAt(index);
 
-                              if (documentSnapshot['first_name']
-                                      .toString()
-                                      .toLowerCase()
-                                      .startsWith(search) ||
-                                  documentSnapshot['userid']
-                                      .toString()
-                                      .toLowerCase()
-                                      .startsWith(search) ||documentSnapshot['token']
-                                      .toString()
-                                      .toLowerCase()
-                                      .startsWith(search)) {
+                            if (documentSnapshot['first_name']
+                                    .toString()
+                                    .toLowerCase()
+                                    .startsWith(search) ||
+                                documentSnapshot['userid']
+                                    .toString()
+                                    .toLowerCase()
+                                    .startsWith(search) ||
+                                documentSnapshot['token']
+                                    .toString()
+                                    .toLowerCase()
+                                    .startsWith(search)) {
                               return Container(
                                 height: height / 1.5,
                                 decoration: BoxDecoration(
