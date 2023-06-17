@@ -176,7 +176,8 @@ class _HomeState extends State<Home> {
         ),
         SizedBox(
           height: MediaQuery.of(context).size.width < 1000 ? height - 150 : 170,
-          child: ResponsiveGridList(
+          child:
+           ResponsiveGridList(
               horizontalGridSpacing: 16,
               horizontalGridMargin: 20,
               minItemWidth: 270,

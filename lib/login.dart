@@ -1,9 +1,9 @@
 import 'package:ag_financial_admin_pannel/controller.dart';
 import 'package:ag_financial_admin_pannel/sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'dart:async';
 
 import 'package:responsive_builder/responsive_builder.dart';
@@ -67,21 +67,21 @@ class _LoginState extends State<Login> {
     });
   }
 
-  String localtoken = '';
-  checkLogin() {
-    String? token = LocalStorageHelper.getValue('userid');
+  // String localtoken = '';
+  // checkLogin() {
+  //   String? token = LocalStorageHelper.getValue('userid');
 
-    if (token != null) {
-      setState(() {
-        localtoken = token;
-      });
-    } else {
-      setState(() {
-        localtoken = '';
-      });
-    }
-    //log('user number is splash $token');
-  }
+  //   if (token != null) {
+  //     setState(() {
+  //       localtoken = token;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       localtoken = '';
+  //     });
+  //   }
+  //   //log('user number is splash $token');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -286,10 +286,10 @@ class _LoginState extends State<Login> {
                                 onPressed: () {
                                   if (userid.text.isNotEmpty &&
                                       password.text.isNotEmpty) {
-                                    setState(() {
-                                      id = userid.text;
-                                    });
-                                    getadmindata(id);
+                                    // setState(() {
+                                    //   id = userid.text;
+                                    // });
+                                    getadmindata(userid.text);
                                   }
                                 },
                               ),
