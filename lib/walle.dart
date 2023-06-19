@@ -1,4 +1,3 @@
-
 import 'package:ag_financial_admin_pannel/payment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +17,13 @@ class Wallet extends StatefulWidget {
 
 class _WalletState extends State<Wallet> {
   bool addwallet = false;
-  String id = '';
+  String id = 'ff';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: addwallet
-          ?Payments(ids: id)
+          ? Payments(ids: id)
           : StreamBuilder(
               stream:
                   FirebaseFirestore.instance.collection('agents').snapshots(),
@@ -130,15 +129,16 @@ class _WalletState extends State<Wallet> {
                                                     streamSnapshot) {
                                               if (streamSnapshot.hasData) {
                                                 return ListView.builder(
-                                                    itemCount: streamSnapshot.data!.docs.length,
+                                                    itemCount: streamSnapshot
+                                                        .data!.docs.length,
                                                     itemBuilder:
                                                         (BuildContext context,
                                                             int index) {
-                                                      return  const Icon(
-                                                Icons.done,
-                                                color: Colors.amber,
-                                                size: 33,
-                                              );
+                                                      return const Icon(
+                                                        Icons.done,
+                                                        color: Colors.amber,
+                                                        size: 33,
+                                                      );
                                                     });
                                               }
                                               return const Icon(
@@ -162,7 +162,4 @@ class _WalletState extends State<Wallet> {
               }),
     );
   }
-
-
-
 }
