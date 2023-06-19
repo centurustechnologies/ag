@@ -1,32 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
+
 import 'package:lottie/lottie.dart';
 
-
-class Leads extends StatefulWidget {
+class LeadAgent extends StatefulWidget {
   final String ids;
-  const Leads({
+  const LeadAgent({
     super.key,
     required this.ids,
   });
 
   @override
-  State<Leads> createState() => _LeadsState();
+  State<LeadAgent> createState() => _LeadsState();
 }
 
-class _LeadsState extends State<Leads> {
+class _LeadsState extends State<LeadAgent> {
   List category = [
     'Applicant Mobile no.',
-    'Date of birth',
+    'date of birth',
     'Mother name',
     'Email',
-    'Pan Number',
+    'pan Number',
     'Pin Code',
     'Current Adress',
     'LandMark',
-    'Company name',
+    'company name',
     'Designation',
     'Official adress',
     'Existing Card Bank',
@@ -34,7 +35,7 @@ class _LeadsState extends State<Leads> {
     'Existing Card Vintage',
     'Net Monthly Income',
     'ITR Slip',
-    'Date',
+    'date',
     'Application Number',
     'Lead Number'
   ];
@@ -70,6 +71,7 @@ class _LeadsState extends State<Leads> {
 
   String location = '';
   String name = '';
+  bool agents = false;
   Future getadmindata() async {
     await FirebaseFirestore.instance
         .collection('admins')
@@ -441,8 +443,29 @@ class _LeadsState extends State<Leads> {
             SizedBox(
               height: 35,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        agents = true;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 11, vertical: 6),
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 92, 154, 205),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: const Text(
+                        'My Agents',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
                   Container(
                     height: 30,
                     width: 300,
@@ -624,10 +647,8 @@ class _LeadsState extends State<Leads> {
             SizedBox(
               height: height / 1.2,
               child: StreamBuilder(
-                  stream: location == 'ludhiana'
-                      ? Payments.snapshots()
-                      : Payments.where('location', isEqualTo: location)
-                          .snapshots(),
+                  stream: Payments.where('token', isEqualTo: widget.ids)
+                      .snapshots(),
                   builder:
                       (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                     if (streamSnapshot.hasData) {
@@ -1014,12 +1035,7 @@ class _LeadsState extends State<Leads> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                documentSnapshot['last_name']
-                                                        .toString()
-                                                        .contains('-')
-                                                    ? documentSnapshot[
-                                                        'last_name']
-                                                    : "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+                                                documentSnapshot['last_name'],
                                                 style: const TextStyle(
                                                     fontSize: 13,
                                                     fontWeight: FontWeight.w700,
@@ -1034,6 +1050,7 @@ class _LeadsState extends State<Leads> {
                                               vertical: 2),
                                           child: InkWell(
                                             onTap: () {
+                                              //add();
                                               dialog(
                                                   context, documentSnapshot.id);
                                             },
@@ -1186,7 +1203,8 @@ class _LeadsState extends State<Leads> {
               ),
             ),
             StreamBuilder(
-                stream: Payments.snapshots(),
+                stream:
+                    Payments.where('token', isEqualTo: widget.ids).snapshots(),
                 builder:
                     (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                   if (streamSnapshot.hasData) {
