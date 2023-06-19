@@ -1,8 +1,8 @@
-import 'package:ag_financial_admin_pannel/addwallet.dart';
+
+import 'package:ag_financial_admin_pannel/payment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class Wallet extends StatefulWidget {
@@ -24,9 +24,7 @@ class _WalletState extends State<Wallet> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: addwallet
-          ? AddWallet(
-              ids: id,
-            )
+          ?Payments(ids: id)
           : StreamBuilder(
               stream:
                   FirebaseFirestore.instance.collection('agents').snapshots(),
@@ -164,4 +162,7 @@ class _WalletState extends State<Wallet> {
               }),
     );
   }
+
+
+
 }

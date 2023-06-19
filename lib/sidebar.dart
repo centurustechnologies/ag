@@ -200,7 +200,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           },
         ),
         SidebarXItem(
-          icon: Icons.credit_card,
+          icon: Icons.money,
           label: 'Banks',
           onTap: () {
             isSmallScreen ? Navigator.pop(context) : null;
