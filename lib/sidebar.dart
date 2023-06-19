@@ -41,7 +41,7 @@ class _SidebarXExampleAppState extends State<SidebarXExampleApp> {
     return WillPopScope(
       onWillPop: willPop,
       child: MaterialApp(
-        title: 'SidebarX Example',
+        title: 'AG Financial Admin Pannel',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: const Color.fromARGB(255, 4, 63, 111),

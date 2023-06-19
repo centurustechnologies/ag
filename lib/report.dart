@@ -1,55 +1,101 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-class Textfi extends StatefulWidget {
+class PaginationExample extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _TextfiState();
+  _PaginationExampleState createState() => _PaginationExampleState();
 }
 
-class _TextfiState extends State<Textfi> {
-  // Define multiple controllers for different inputs
-  final TextEditingController _controller1 = TextEditingController();
-  final TextEditingController _controller2 = TextEditingController();
-
-  
-  late TextEditingController _currentController;
+class _PaginationExampleState extends State<PaginationExample> {
+  final int pageSize = 10; // Number of items to load per page
+  int currentPage = 1; // Current page number
+  late Stream<QuerySnapshot> dataStream; // Stream to fetch data
 
   @override
   void initState() {
     super.initState();
-    _currentController = _controller1; // Initialize the current controller
+    // Load initial data for the first page
+    dataStream = loadPage(currentPage);
   }
+
+  Stream<QuerySnapshot> loadPage(int page) {
+    // Fetch data from Firestore using pagination
+    var collectionRef = FirebaseFirestore.instance.collection('leads');
+    var query = collectionRef.orderBy('first_name').limit(pageSize);
+
+    if (page > 1) {
+      // Skip items based on the previous page's last item
+      query = query.startAfterDocument(lastDocument);
+    }
+
+    return query.snapshots().map((snapshot) {
+      // Update the last document for the next page
+      if (snapshot.docs.isNotEmpty) {
+        lastDocument = snapshot.docs.last;
+      }
+      return snapshot;
+    });
+  }
+
+  late DocumentSnapshot lastDocument;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: _currentController,
-                decoration: InputDecoration(
-                  hintText: 'Enter text',
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Switch to the next controller and update the hint text
-                  setState(() {
-                    _currentController = _currentController == _controller1
-                        ? _controller2
-                        : _controller1;
-                  });
-                  _currentController.clear(); // Clear the text input
-                },
-                child: Text('Switch Controller'),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pagination Example'),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: dataStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            // Extract the documents from the snapshot
+            var documents = snapshot.data!.docs;
+
+            return ListView.builder(
+              itemCount: documents.length,
+              itemBuilder: (context, index) {
+                var document = documents[index];
+                // Display your data here
+                return ListTile(
+                  title: Text(document['first_name']),
+                  subtitle: Text(document['first_name']),
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          // Show a loading indicator while data is being fetched
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentPage - 1,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_back),
+            label: 'Previous',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_forward),
+            label: 'Next',
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            if (index == 0 && currentPage > 1) {
+              // Go to the previous page
+              currentPage--;
+            } else if (index == 1) {
+              // Go to the next page
+              currentPage++;
+            }
+            // Load data for the new page
+            dataStream = loadPage(currentPage);
+          });
+        },
       ),
     );
   }

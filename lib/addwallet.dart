@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
@@ -26,22 +27,25 @@ class _AddWalletState extends State<AddWallet> {
   TextEditingController icici = TextEditingController();
 
   TextEditingController sbi = TextEditingController();
+  TextEditingController standard = TextEditingController();
+  TextEditingController yes = TextEditingController();
+  TextEditingController hdfconline = TextEditingController();
 
   Future wallet() async {
     await FirebaseFirestore.instance
         .collection('userwallet')
         .doc(widget.ids)
         .set({
-          'balance':'0',
-          'id':widget.ids,
-          'sbi:':sbi.text,
-          'aubank':aubank.text,
-          'indusind':indusind.text,
-          'baroda':baroda.text,
-          'hdfc':hdfc.text,
-          'idfc':idfc.text,
-          'icici':icici.text
-        });
+      'balance': '0',
+      'id': widget.ids,
+      'sbi:': sbi.text,
+      'aubank': aubank.text,
+      'indusind': indusind.text,
+      'baroda': baroda.text,
+      'hdfc': hdfc.text,
+      'idfc': idfc.text,
+      'icici': icici.text
+    });
   }
 
   @override
@@ -120,20 +124,31 @@ class _AddWalletState extends State<AddWallet> {
                                       padding:
                                           EdgeInsets.only(left: 15, bottom: 6),
                                       child: TextField(
-                                    
                                         controller: index == 0
                                             ? aubank
                                             : index == 1
                                                 ? indusind
                                                 : index == 2
-                                                    ? baroda
+                                                    ? hdfconline
                                                     : index == 3
-                                                        ? hdfc
+                                                        ? indusind
                                                         : index == 4
-                                                            ? idfc
+                                                            ? standard
                                                             : index == 5
-                                                                ? icici
-                                                                : sbi,
+                                                                ? yes
+                                                                : index == 6
+                                                                    ? hdfc
+                                                                    : index == 7
+                                                                        ? idfc
+                                                                        : index ==
+                                                                                8
+                                                                            ? icici
+                                                                            : sbi,
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                          LengthLimitingTextInputFormatter(5)
+                                        ],
                                         decoration: const InputDecoration(
                                           border: InputBorder.none,
                                           hintText: 'Enter Amount',

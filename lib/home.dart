@@ -176,8 +176,7 @@ class _HomeState extends State<Home> {
         ),
         SizedBox(
           height: MediaQuery.of(context).size.width < 1000 ? height - 150 : 170,
-          child:
-           ResponsiveGridList(
+          child: ResponsiveGridList(
               horizontalGridSpacing: 16,
               horizontalGridMargin: 20,
               minItemWidth: 270,
@@ -191,12 +190,12 @@ class _HomeState extends State<Home> {
                 4,
                 (index) => InkWell(
                   onTap: () {
-                    location == 'ludhiana'
-                    ?
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AgentsLead(password: 'jhh')),
-                      ):null; 
+                    // location == 'ludhiana'
+                    // ?
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(builder: (context) => const AgentsLead(password: 'jhh')),
+                    //   ):null;
                   },
                   child: Container(
                     height: width < 600 ? height / 4.5 : height / 5.5,
@@ -240,22 +239,18 @@ class _HomeState extends State<Home> {
                                       ? index == 0
                                           ? Payments.snapshots()
                                           : index == 1
-                                              ? Payments.where(
-                                                      'application_status',
+                                              ? Payments.where('application_status',
                                                       isEqualTo: 'sucess')
                                                   .snapshots()
-                                              :index == 2
-                                              ? Payments.where(
-                                                      'location',
-                                                      isEqualTo: '')
-                                                  .snapshots()
-                                              : Payments.where(
-                                                      'application_status',
-                                                      isEqualTo: 'Pending')
-                                                  .snapshots()
+                                              : index == 2
+                                                  ? Payments.where('location', isEqualTo: '')
+                                                      .snapshots()
+                                                  : Payments.where(
+                                                          'application_status',
+                                                          isEqualTo: 'Pending')
+                                                      .snapshots()
                                       : index == 0
-                                          ? Payments.where('location',
-                                                  isEqualTo: location)
+                                          ? Payments.where('location', isEqualTo: location)
                                               .snapshots()
                                           : index == 1
                                               ? Payments.where(
@@ -264,8 +259,7 @@ class _HomeState extends State<Home> {
                                                   .where('location',
                                                       isEqualTo: location)
                                                   .snapshots()
-                                              : Payments.where('location',
-                                                      isEqualTo: location)
+                                              : Payments.where('location', isEqualTo: location)
                                                   .where('application_status',
                                                       isEqualTo: 'Pending')
                                                   .snapshots(),
@@ -276,7 +270,8 @@ class _HomeState extends State<Home> {
                                         (streamSnapshot.data!.docs.length)
                                             .toString(),
                                         style: TextStyle(
-                                            color: Colors.white.withOpacity(0.7),
+                                            color:
+                                                Colors.white.withOpacity(0.7),
                                             fontSize: 24,
                                             fontWeight: FontWeight.bold),
                                       );

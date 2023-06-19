@@ -4,7 +4,6 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 import 'package:lottie/lottie.dart';
 
-
 class Leads extends StatefulWidget {
   final String ids;
   const Leads({
@@ -569,13 +568,14 @@ class _LeadsState extends State<Leads> {
                       ),
                     ),
                     SizedBox(
-                      width: width / 12,
+                      width: width / 10,
                       child: const Text(
                         'Applicant',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     SizedBox(
@@ -586,6 +586,7 @@ class _LeadsState extends State<Leads> {
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     SizedBox(
@@ -596,7 +597,7 @@ class _LeadsState extends State<Leads> {
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.start,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     SizedBox(
@@ -645,48 +646,85 @@ class _LeadsState extends State<Leads> {
                             children: List.generate(
                                 streamSnapshot.data!.docs
                                     .where((element) =>
-                                        element['first_name']
+                                        // element['first_name']
+                                        //     .toString()
+                                        //     .toLowerCase()
+                                        //     .contains(search) ||
+                                        // element['userid']
+                                        //     .toString()
+                                        //     .toLowerCase()
+                                        //     .contains(search) ||
+                                        // element['token']
+                                        //     .toString()
+                                        //     .toLowerCase()
+                                        //     .contains(search) ||
+                                        // element['Bank_name']
+                                        //     .toString()
+                                        //     .toLowerCase()
+                                        //     .contains(search) ||
+                                        ("${element['Bank_name']}${element['first_name']}${element['token']}${element['card_type']}")
                                             .toString()
                                             .toLowerCase()
                                             .contains(search) ||
-                                        element['userid']
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(search) ||
-                                        element['token']
+                                        ("${element['card_type']}${element['first_name']}${element['token']}${element['Bank_name']}")
                                             .toString()
                                             .toLowerCase()
                                             .contains(search))
                                     .length, (index) {
                               final filteredData = streamSnapshot.data!.docs
                                   .where((element) =>
-                                      element['first_name']
+                                      // element['first_name']
+                                      //     .toString()
+                                      //     .toLowerCase()
+                                      //     .contains(search) ||
+                                      // element['userid']
+                                      //     .toString()
+                                      //     .toLowerCase()
+                                      //     .contains(search) ||
+                                      // element['token']
+                                      //     .toString()
+                                      //     .toLowerCase()
+                                      //     .contains(search) ||
+                                      // element['Bank_name']
+                                      //     .toString()
+                                      //     .toLowerCase()
+                                      //     .contains(search) ||
+                                      ("${element['Bank_name']}${element['first_name']}${element['token']}${element['card_type']}")
                                           .toString()
                                           .toLowerCase()
                                           .contains(search) ||
-                                      element['userid']
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(search) ||
-                                      element['token']
+                                      ("${element['card_type']}${element['first_name']}${element['token']}${element['Bank_name']}")
                                           .toString()
                                           .toLowerCase()
                                           .contains(search));
                               final documentSnapshot =
                                   filteredData.elementAt(index);
 
-                              if (documentSnapshot['first_name']
-                                      .toString()
-                                      .toLowerCase()
-                                      .startsWith(search) ||
-                                  documentSnapshot['userid']
-                                      .toString()
-                                      .toLowerCase()
-                                      .startsWith(search) ||
-                                  documentSnapshot['token']
-                                      .toString()
-                                      .toLowerCase()
-                                      .startsWith(search)) {
+                              if (
+                                  // documentSnapshot['first_name']
+                                  //       .toString()
+                                  //       .toLowerCase()
+                                  //       .startsWith(search) ||
+                                  //   documentSnapshot['userid']
+                                  //       .toString()
+                                  //       .toLowerCase()
+                                  //       .startsWith(search) ||
+                                  //   documentSnapshot['token']
+                                  //       .toString()
+                                  //       .toLowerCase()
+                                  //       .startsWith(search) ||
+                                  //   documentSnapshot['Bank_name']
+                                  //       .toString()
+                                  //       .toLowerCase()
+                                  //       .startsWith(search) ||
+                                  ("${documentSnapshot['Bank_name']}${documentSnapshot['first_name']}${documentSnapshot['token']}${documentSnapshot['card_type']}")
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(search) ||
+                                      ("${documentSnapshot['card_type']}${documentSnapshot['first_name']}${documentSnapshot['token']}${documentSnapshot['Bank_name']}")
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(search)) {
                                 return InkWell(
                                   onTap: () {
                                     showDialog(
@@ -712,7 +750,7 @@ class _LeadsState extends State<Leads> {
                                                       width: 1100,
                                                       decoration: BoxDecoration(
                                                           color: Color.fromARGB(
-                                                              255, 84, 8, 2),
+                                                              255, 3, 59, 105),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
@@ -840,7 +878,7 @@ class _LeadsState extends State<Leads> {
                                                                           Text(
                                                                         index ==
                                                                                 0
-                                                                            ? documentSnapshot['mobile_number']
+                                                                            ? ("${documentSnapshot['card_type']}${documentSnapshot['first_name']}${documentSnapshot['token']}${documentSnapshot['Bank_name']}")
                                                                             : index == 1
                                                                                 ? documentSnapshot['Date_of_birth']
                                                                                 : index == 2
@@ -899,11 +937,11 @@ class _LeadsState extends State<Leads> {
                                                                     child: Container(
                                                                         height: 36,
                                                                         width: 40,
-                                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Color.fromARGB(255, 4, 89, 7), border: Border.all(color: Colors.black.withOpacity(0.2))),
+                                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Color.fromARGB(255, 1, 34, 60), border: Border.all(color: Colors.black.withOpacity(0.2))),
                                                                         child: const Center(
                                                                           child:
                                                                               Icon(
-                                                                            Icons.details,
+                                                                            Icons.edit_off,
                                                                             color:
                                                                                 Colors.white,
                                                                           ),
@@ -967,7 +1005,8 @@ class _LeadsState extends State<Leads> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 120,
+                                          width: 150,
+                                          height: 45,
                                           child: Row(
                                             children: [
                                               Text(
