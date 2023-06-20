@@ -878,7 +878,7 @@ class _LeadsState extends State<Leads> {
                                                                           Text(
                                                                         index ==
                                                                                 0
-                                                                            ? ("${documentSnapshot['card_type']}${documentSnapshot['first_name']}${documentSnapshot['token']}${documentSnapshot['Bank_name']}")
+                                                                            ? documentSnapshot['mobile_number']
                                                                             : index == 1
                                                                                 ? documentSnapshot['Date_of_birth']
                                                                                 : index == 2
