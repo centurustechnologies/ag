@@ -45,8 +45,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: PaginationExample() //Textfi()
-        //const Login(),
-        );
+        home: Login());
   }
 }
