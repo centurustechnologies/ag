@@ -154,6 +154,31 @@ class _PaymentsState extends State<Payments> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      height: 35,
+                      width: 45,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: LinearGradient(
+                            colors: [
+                              Colors.blue,
+                              Color.fromARGB(255, 0, 90, 163)
+                            ],
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topRight),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 0),
+                        child: Center(
+                            child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                        )),
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     height: 160,
                     child: ResponsiveGridList(
