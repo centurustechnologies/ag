@@ -40,11 +40,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+<<<<<<< HEAD
         title: 'AG Financial Admin Pannel',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
         home: Login());
+=======
+      title: 'AG Financial Admin Pannel',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const Login(),
+    );
+>>>>>>> 92b5f4cf525eff07d4883cbc63a1d84a79912ec0
   }
 }
